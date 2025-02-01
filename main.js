@@ -77,10 +77,10 @@
         this.game = game;
         this.x = x;
         this.y = y;
-        this.size = Math.random() * 40 + 5; // Smaller particles for smaller wheel
-        this.speedX = Math.random();
-        this.speedY = Math.random();
-        this.color = "rgba(255, 255, 255, 0.4)";
+        this.size = Math.random() * 5 + 10; // Larger particles now (between 30 and 35)
+        this.speedX = Math.random() * 2 + 1;  // Increased speed for faster movement
+        this.speedY = Math.random() * 2 + 1;  // Increased speed for faster movement
+        this.color = "rgba(27, 18, 16, 0.04)";
         this.markedForDeletion = false;
       }
     
@@ -105,7 +105,7 @@
     const particles = [];
     
     function createDustParticles(x, y) {
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 25; i++) {
         particles.push(new Dust(null, x, y));
       }
     }
@@ -148,9 +148,9 @@
     
       // Alternate slice colors
       if (track === "Special") {
-        ctx.fillStyle = "#FFD700"; // Gold color for the special slice
+        ctx.fillStyle = "#008000"; // Gold color for the special slice
       } else {
-        ctx.fillStyle = i % 2 === 0 ? "#ff4500" : "#008000"; // Regular slice colors
+        ctx.fillStyle = i % 2 === 0 ? "#ff0000" : "#000000"; // Regular slice colors
       }
       ctx.fill();
     
@@ -169,7 +169,7 @@
       );
       ctx.rotate(startAngle + sliceAngle / 2);
       ctx.textAlign = "center";
-      ctx.font = "10px Arial";
+      ctx.font = "20px Racing Sans One";
       ctx.fillText(track, 0, 0);
       ctx.restore();
     });
@@ -275,16 +275,6 @@ function playSpecialSound() {
 }
 
 
-  function showSelectedTrack(trackName) {
-    const trackElement = document.getElementById("selected-track");
-    trackElement.textContent = `Selected Track: ${trackName}`;
-    trackElement.classList.add("show");
-
-    setTimeout(() => {
-      trackElement.classList.remove("show");
-    }, 15000);
-  }
-
   // Initialize the AudioContext only once
   function initializeAudioContext() {
     if (!audioContext) {
@@ -304,109 +294,7 @@ function playSpecialSound() {
     }
   }
 
-  // function playBellTone() {
-  //   // Initialize the AudioContext and components if not done already
-  //   initializeAudioContext();
 
-  //   // Create a new oscillator for the bell sound (every time it's called)
-  //   oscillator = audioContext.createOscillator();
-  //   oscillator.type = 'sine'; // Bell-like tone
-  //   oscillator.frequency.setValueAtTime(240, audioContext.currentTime); // Frequency for bell tone (440Hz = A4)
-
-  //   // Connect oscillator to gain node
-  //   oscillator.connect(gainNode);
-
-  //   // Start the oscillator
-  //   oscillator.start(audioContext.currentTime);
-
-  //   // Fade out the sound by changing the gain value
-  //   gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-  //   gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.03); // Fade out over 0.1 seconds
-
-  //   // Stop the oscillator after 0.1 seconds
-  //   oscillator.stop(audioContext.currentTime + 0.1);
-  // }
-
-
-  function playTireScreech() {
-    // Initialize the AudioContext and components if not done already
-    initializeAudioContext();
-
-    // Create the gain node and its properties
-    const gainNodeScreech = audioContext.createGain();
-    gainNodeScreech.connect(audioContext.destination);
-
-    // Create oscillators for the screeching sound
-    const oscillator1 = audioContext.createOscillator(); // Low-frequency oscillator
-    const oscillator2 = audioContext.createOscillator(); // High-frequency oscillator
-    const oscillator3 = audioContext.createOscillator(); // Add more complexity with a third oscillator
-
-    // Set frequencies (these frequencies will shift over time to mimic the tire screech)
-    oscillator1.frequency.setValueAtTime(200, audioContext.currentTime); // Low frequency, for the base sound
-    oscillator2.frequency.setValueAtTime(1000, audioContext.currentTime); // High frequency, for the sharp screech
-    oscillator3.frequency.setValueAtTime(1500, audioContext.currentTime); // Another layer of sharp sound
-
-    // Apply a bit of detuning to each oscillator to make the sound more complex
-    oscillator1.frequency.exponentialRampToValueAtTime(300, audioContext.currentTime + 0.1); // Gradual rise in low frequency
-    oscillator2.frequency.exponentialRampToValueAtTime(1200, audioContext.currentTime + 0.1); // Gradual rise in high frequency
-    oscillator3.frequency.exponentialRampToValueAtTime(1700, audioContext.currentTime + 0.1); // Gradual rise in 3rd oscillator
-
-    // Add a slight vibrato (pitch modulation) to each oscillator
-    const lfo1 = audioContext.createOscillator();
-    const lfo2 = audioContext.createOscillator();
-    const lfo3 = audioContext.createOscillator();
-    
-    lfo1.frequency.setValueAtTime(4, audioContext.currentTime); // Low-frequency oscillator for pitch modulation
-    lfo2.frequency.setValueAtTime(8, audioContext.currentTime); // Slightly faster for added variation
-    lfo3.frequency.setValueAtTime(6, audioContext.currentTime); // A different vibrato speed
-
-    const lfoGain1 = audioContext.createGain();
-    const lfoGain2 = audioContext.createGain();
-    const lfoGain3 = audioContext.createGain();
-
-    // Modulate pitch by slightly altering frequency
-    lfoGain1.gain.setValueAtTime(180, audioContext.currentTime); // LFO gain for modulation depth
-    lfoGain2.gain.setValueAtTime(60, audioContext.currentTime);
-    lfoGain3.gain.setValueAtTime(50, audioContext.currentTime);
-
-    // Connect LFOs to oscillators for pitch modulation
-    lfo1.connect(lfoGain1);
-    lfo2.connect(lfoGain2);
-    lfo3.connect(lfoGain3);
-
-    lfoGain1.connect(oscillator1.frequency);
-    lfoGain2.connect(oscillator2.frequency);
-    lfoGain3.connect(oscillator3.frequency);
-
-    // Start LFOs
-    lfo1.start();
-    lfo2.start();
-    lfo3.start();
-
-    // Connect oscillators to the gain node
-    oscillator1.connect(gainNodeScreech);
-    oscillator2.connect(gainNodeScreech);
-    oscillator3.connect(gainNodeScreech);
-
-    // Start oscillators
-    oscillator1.start();
-    oscillator2.start();
-    oscillator3.start();
-
-    // Fade out the sound (exponentially) for a sharp end
-    gainNodeScreech.gain.setValueAtTime(0.1, audioContext.currentTime);
-    gainNodeScreech.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.2); // Fade out slowly over 0.5 seconds
-
-    // Stop oscillators after 0.5 seconds
-    oscillator1.stop(audioContext.currentTime + 0.5);
-    oscillator2.stop(audioContext.currentTime + 0.5);
-    oscillator3.stop(audioContext.currentTime + 0.5);
-
-    // Stop the LFOs (pitch modulation) after sound ends
-    lfo1.stop(audioContext.currentTime + 0.5);
-    lfo2.stop(audioContext.currentTime + 0.5);
-    lfo3.stop(audioContext.currentTime + 0.5);
-  }
   function playF1EngineSound() {
     // Initialize the AudioContext and components if not done already
     initializeAudioContext();
@@ -501,28 +389,32 @@ function playSpecialSound() {
       if (currentVelocity > 0) {
         currentAngle += currentVelocity;
         currentVelocity -= deceleration * 0.85;
-
+    
         // Normalize angle to stay within 0-2π radians
         if (currentAngle > 2 * Math.PI) {
           currentAngle -= 2 * Math.PI; // Keep it within a single rotation range
         }
+    
+        // Redraw the canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear previous frame
+    
+        // Draw the particles first (behind the wheel)
 
-        // Redraw the wheel
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw the wheel after the particles
         drawWheel();
         wheelOverlay.style.transform = `translate(-50%, -50%) rotate(${currentAngle}rad)`;
-
+        drawParticles();
         // Create and update particles while spinning
         createDustParticles(canvasRadius - wheelOverlaySize / 2 + 120, canvasRadius + wheelOverlaySize / 2 - 80);
         updateParticles();
-        drawParticles();
-
+    
         // Determine the slice angle
         const sliceAngle = (2 * Math.PI) / tracks.length;
-
+    
         // Check if the angle crosses a slice boundary
         const currentSlice = Math.floor(currentAngle / sliceAngle);
-
+    
         // Check if we've crossed into a new slice
         if (currentSlice !== lastSlice) {
           // Play the bell sound at each slice boundary
@@ -530,24 +422,25 @@ function playSpecialSound() {
           playF1EngineSound()
           lastSlice = currentSlice; // Update the last slice to the current one
         }
-
+    
         // Continue animation
         requestAnimationFrame(animate);
       } else {
         // Stop spinning
         isSpinning = false;
-
+    
         // Clear canvas and particles after spin ends
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         clearParticles();
-
+    
         // Redraw the wheel without particles
         drawWheel();
-
+    
         // Determine the selected track
         determineSelection();
       }
     }
+    
 
     animate();
   }
@@ -561,7 +454,7 @@ function playSpecialSound() {
 
     setTimeout(() => {
       trackElement.classList.remove("show");
-    }, 15000);
+    }, 9000);
   }
 
   // Initial setup
