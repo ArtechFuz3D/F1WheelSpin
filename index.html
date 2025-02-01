@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>F1 Wheel Spin Game</title>
+    <link rel="stylesheet" href="src/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alata&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Audiowide&family=Bangers&family=Chokokutai&family=Creepster&family=Noto+Sans+Canadian+Aboriginal:wght@100..900&family=Orbitron:wght@400..900&family=Racing+Sans+One&family=Wavefont:wght@4..1000&family=Zen+Dots&display=swap" rel="stylesheet">
+<style>
+  #special{
+    display: none;
+    z-index: 900;
+  }
+</style>
+  </head>
+  <body>
+
+    <canvas id="wheelCanvas"></canvas>
+    <div id="selected-track">Waiting for spin ...</div>
+    <button id="spin-button">Spin the Wheel!</button>
+    <h1 id="loading">LOADING...</h1>
+    <img id="special" src="special.webp" style="display: none; position: absolute;" />
+
+
+    <script src="src/main.js"></script>
+  </body>
+</html>
